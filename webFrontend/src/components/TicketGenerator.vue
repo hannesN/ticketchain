@@ -1,29 +1,29 @@
 <template>
   <div>
-    <v-form>
-      <v-container>
-        <v-layout row justify-space-around>
-          <v-flex xs12 sm6 md3>
+    <v-layout row>
+      <v-flex xs12 sm12 md10 offset-md1 class="inputContainer">
+        <v-card>
+          <v-card-text>
             <v-text-field label="ID" placeholder="ID" outline v-model="ticket.id"></v-text-field>
-          </v-flex>
-          <v-flex xs12 sm6 md3>
+          </v-card-text>
+          <v-card-text>
             <v-text-field label="Name" placeholder="Name" outline v-model="ticket.name"></v-text-field>
-          </v-flex>
-          <v-flex xs12 sm6 md3>
+          </v-card-text>
+          <v-card-text>
             <v-text-field label="Place" placeholder="Place" outline v-model="ticket.place"></v-text-field>
-          </v-flex>
-        </v-layout>
-      </v-container>
-    </v-form>
-    <v-container fluid grid-list-xl>
-      <v-layout row justify-space-around>
-        <v-flex xs2>
-          <div>
-            <v-btn color="info" class="btnInfo" @click="addTicket">SEND</v-btn>
-          </div>
-        </v-flex>
-      </v-layout>
-    </v-container>
+          </v-card-text>
+          <v-card-text>
+            <v-container fluid grid-list-xl>
+              <v-layout row justify-space-around>
+                <div>
+                  <v-btn color="info" class="btnInfo" @click="addTicket">SEND</v-btn>
+                </div>
+              </v-layout>
+            </v-container>
+          </v-card-text>
+        </v-card>
+      </v-flex>
+    </v-layout>
   </div>
 </template>
 
@@ -55,6 +55,11 @@ export default {
 
 <style scoped>
 .btnInfo {
-  background-color: #2196f3 !important
+  background-color: #2196f3 !important;
+  margin-top: -26pt
+}
+
+.inputContainer {
+  padding-top: 16pt
 }
 </style>

@@ -1,13 +1,13 @@
 <template>
   <div>
-    <v-toolbar color="cyan" dark tabs>
+    <v-toolbar color="blue" dark tabs>
       <v-toolbar-title>{{ msg }}</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn icon>
         <v-icon>more_vert</v-icon>
       </v-btn>
-      <v-tabs slot="extension" v-model="tab" color="cyan" grow>
-        <v-tabs-slider color="yellow"></v-tabs-slider>
+      <v-tabs slot="extension" v-model="tab" color="blue" grow>
+        <v-tabs-slider color="green"></v-tabs-slider>
         <v-tab v-for="item in items" :key="item">
           {{ item }}
         </v-tab>
@@ -31,8 +31,7 @@ export default {
       tab: null,
       items: [
         'Your Wallet', 'New Ticket'
-      ],
-      text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
+      ]
     }
   },
   components: {

@@ -1,6 +1,6 @@
 <template>
   <div class="ticketListContainer">
-    <v-container grid-list-md text-xs-center>
+    <v-container grid-list-xl text-xs-center>
       <v-layout row wrap>
         <v-flex xs12 sm12 md10 offset-md1 v-for="ticket in tickets" :key="ticket.id" v-bind="ticket">
           <v-card light color="primary">
