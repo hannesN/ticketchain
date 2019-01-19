@@ -1,5 +1,6 @@
 <template>
   <div>
+    <v-app v-if="loggedIn">
     <v-toolbar color="blue" dark tabs>
       <v-toolbar-title>{{ msg }}</v-toolbar-title>
       <v-spacer></v-spacer>
@@ -17,12 +18,18 @@
       <ticket-list v-if="parseInt(tab)===0" />
       <ticket-generator v-if="parseInt(tab)===1" />
     </v-tabs-items>
+  </v-app>
+  <v-app v-if="!loggedIn">
+    <login-page/>
+  </v-app>
   </div>
 </template>
 
 <script>
 import TicketList from './TicketList.vue'
 import TicketGenerator from './TicketGenerator.vue'
+import LoginPage from './LoginPage.vue'
+import store from '../bo/store'
 export default {
   name: 'HelloWorld',
   data () {
@@ -34,9 +41,15 @@ export default {
       ]
     }
   },
+  computed: {
+    loggedIn () {
+      return store.state.loggedIn
+    }
+  },
   components: {
     TicketList,
-    TicketGenerator
+    TicketGenerator,
+    LoginPage
   }
 }
 </script>

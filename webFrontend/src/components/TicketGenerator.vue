@@ -1,5 +1,6 @@
 <template>
   <div>
+    <v-app>
     <v-layout row>
       <v-flex xs12 sm12 md10 offset-md1 class="inputContainer">
         <v-card>
@@ -24,6 +25,7 @@
         </v-card>
       </v-flex>
     </v-layout>
+    </v-app>
   </div>
 </template>
 
@@ -32,6 +34,7 @@ import {
   addTicket
 } from '../bo/sendTickets'
 import Ticket from '../bo/Ticket'
+import store from '../bo/store'
 
 export default {
   name: 'TicketGenerator',
@@ -49,6 +52,9 @@ export default {
       var ticketNew = new Ticket(this.ticket.name, this.ticket.id)
       addTicket(ticketNew)
     }
+  },
+  mounted () {
+    store.commit('startLoading')
   }
 }
 </script>
