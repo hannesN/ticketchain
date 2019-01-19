@@ -2,7 +2,10 @@ package io.ticketchain.wallet.iota
 
 import android.util.Log
 import jota.IotaAPI
+import jota.model.Bundle
+import jota.utils.TrytesConverter
 import java.util.concurrent.CompletableFuture
+import kotlin.math.sign
 
 class Wallet(val iotaApi: IotaAPI) {
 
@@ -42,16 +45,16 @@ class Wallet(val iotaApi: IotaAPI) {
         return addressList
     }
 
-
     fun getAllTokens(): List<String> {
         return CompletableFuture.supplyAsync({
             val transactions = iotaApi.findTransactionObjectsByAddresses(getAllAddresses().toTypedArray())
             Log.d(TAG, "Found #tokens: "+transactions.size)
             transactions.forEach({
-                Log.d(TAG, it.bundle)
+                val sig = it.signatureFragments
+                val signatureconverted = TrytesConverter.trytesToAscii(it.signatureFragments)
+                Log.d(TAG, "Signature: "+ signatureconverted)
             })
             listOf<String>()
         }).get()
     }
-
 }
