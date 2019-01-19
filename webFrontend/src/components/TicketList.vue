@@ -7,7 +7,7 @@
             <v-card light>
               <v-card-title primary-title>
                 <div>
-                  <div class="headline">{{ticket.name}}</div>
+                  <div class="headline">{{ticket.event}}</div>
                   <span class="grey--text">The Ticket has the ID: {{ticket.id}}</span>
                 </div>
               </v-card-title>
@@ -17,6 +17,16 @@
                   <v-icon>send</v-icon>
                 </v-btn>
               </v-card-actions>
+            </v-card>
+          </v-flex>
+          <v-flex xs12 sm12 md10 offset-md1 v-if="tickets.length === 0">
+            <v-card light>
+              <v-card-title primary-title>
+                <div>
+                  <div class="headline">{{emptyTicket.event}}</div>
+                  <span class="grey--text">The Ticket has the ID: {{emptyTicket.id}}</span>
+                </div>
+              </v-card-title>
             </v-card>
           </v-flex>
           <v-container fluid grid-list-xl>
@@ -43,9 +53,15 @@ import {
 import {
   getTickets
 } from '../bo/getTickets'
+import Ticket from '../bo/Ticket'
 
 export default {
   name: 'TicketList',
+  data () {
+    return {
+      emptyTicket: new Ticket(0, 'no event set', 'no location', 'no promoter', 'no date')
+    }
+  },
   computed: {
     tickets () {
       return store.state.tickets

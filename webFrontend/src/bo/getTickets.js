@@ -4,9 +4,9 @@ import Ticket from './Ticket'
 
 function getTickets () {
   store.commit('startLoading')
-  axios.get('https://jsonplaceholder.typicode.com/todos/1')
+  axios.get('http://192.168.16.150:8080/tickets/test/201901192000')
     .then(function (response) {
-      store.commit('addTicket', new Ticket(response.data.title, response.data.id))
+      store.commit('addTicket', new Ticket(response.data.id, response.data.title, 'location', 'promoter', new Date()))
       store.commit('finishLoadingSuccessfully')
     })
     .catch(function (error) {
@@ -18,4 +18,6 @@ function getTickets () {
     })
 }
 
-export { getTickets }
+export {
+  getTickets
+}
