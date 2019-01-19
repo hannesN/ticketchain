@@ -29,12 +29,13 @@ class HttpServer(val port: Int) {
     }
 
     private fun header(res: Response): Response {
-        res.header("Access-Control-Allow-Origin","*")
+        println("- ${res}")
+        res.header("Access-Control-Allow-Origin", "*")
         return res
     }
 
     private fun createTickets(req: Request, res: Response): String {
-        val json= req.body()
+        val json = req.body()
         val creationAction = TicketConverter.fromJson(json)
 
         val ticketList = mutableListOf<TicketWithToken>()
@@ -47,7 +48,7 @@ class HttpServer(val port: Int) {
         }
 
         val dateUrl = DATE_URL_FORMATTER.format(creationAction.ticket.date)
-        Iota.send("${creationAction.ticket.event}/${dateUrl}",ticketList)
+        Iota.send("${creationAction.ticket.event}/${dateUrl}", ticketList)
 
         return TicketConverter.toJson(ticketList)
     }

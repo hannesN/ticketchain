@@ -14,30 +14,16 @@ data class Ticket(
     val date: Date
 ) {
     constructor(ticketWithToken: TicketWithToken) : this(
-        ticketWithToken.event,
-        ticketWithToken.location,
-        ticketWithToken.promoter,
-        ticketWithToken.date
+        ticketWithToken.ticket.event,
+        ticketWithToken.ticket.location,
+        ticketWithToken.ticket.promoter,
+        ticketWithToken.ticket.date
     )
 }
 
 data class TicketCreation(val ticket: Ticket, val count: Int)
 
-data class TicketWithToken(
-    val event: String,
-    val location: String,
-    val promoter: String,
-    val date: Date,
-    val token: String
-) {
-    constructor(ticket: Ticket, token: String) : this(
-        ticket.event,
-        ticket.location,
-        ticket.promoter,
-        ticket.date,
-        token
-    )
-}
+data class TicketWithToken(val ticket: Ticket,val token: String)
 
 class TicketConverter {
     companion object {
@@ -54,11 +40,7 @@ class TicketConverter {
         }
 
         fun withToken(ticket: Ticket, token: String): TicketWithToken {
-            return TicketWithToken(ticket.event, ticket.location, ticket.promoter, ticket.date, token)
-        }
-
-        fun withoutToken(ticket: TicketWithToken): Ticket {
-            return Ticket(ticket.event, ticket.location, ticket.promoter, ticket.date)
+            return TicketWithToken(ticket, token)
         }
 
         private fun gson(): Gson {
