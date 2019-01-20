@@ -1,0 +1,36 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.3.11'
+    id 'application'
+}
+
+group 'io.ticketchain'
+version '0.0.1'
+
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    compile "com.sparkjava:spark-kotlin:1.0.0-alpha"
+    compile 'org.apache.spark:spark-core_2.11:2.1.0'
+    compile 'com.google.code.gson:gson:2.8.0'
+    compile 'com.github.iotaledger:iota-java:1.0.0-beta3'
+
+    testCompile 'junit:junit:4.12'
+    testCompile "org.mockito:mockito-core:1.9.5"
+    testCompile "org.jetbrains.kotlin:kotlin-test-junit:1.3.11"
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+application {
+    mainClassName = "io.ticketchain.backend.Main"
+    executableDir = "out"
+}
