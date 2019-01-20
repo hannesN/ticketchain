@@ -38,6 +38,8 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
     implementation 'com.github.iotaledger:iota-java:1.0.0-beta3'
+    implementation 'com.github.kenglxn.QRGen:android:2.5.0'
+    implementation 'com.android.support:recyclerview-v7:26.0.0'
 }
 
 allprojects {

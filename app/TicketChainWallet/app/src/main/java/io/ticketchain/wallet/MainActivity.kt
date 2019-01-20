@@ -2,41 +2,38 @@ package io.ticketchain.wallet
 
 import android.os.Bundle
 import android.support.design.widget.NavigationView
+import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import io.ticketchain.wallet.iota.IOTAFactory
-import io.ticketchain.wallet.iota.Transaction
-import io.ticketchain.wallet.iota.Wallet
+import io.ticketchain.wallet.fragments.SendTicketFragment
+import io.ticketchain.wallet.fragments.ShowAddressFragment
+import io.ticketchain.wallet.fragments.TicketListFragment
+import io.ticketchain.wallet.fragments.WelcomeFragment
+import io.ticketchain.wallet.ether.EtherFactory
+import io.ticketchain.wallet.ether.Wallet
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
-import kotlinx.android.synthetic.main.content_main.*
-import java.lang.StringBuilder
-import kotlin.random.Random
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    val iotaFactory: IOTAFactory = IOTAFactory()
+    val etherFactory: EtherFactory = EtherFactory(this)
 
-    val wallet1Id = "ASDGTNBEF9KJDBTZLOHSBCJSTJJMABVC9HJBGZIDAHFVMNFQAXGAHJKF9VCGHCFGJCGHFNKLGFEGHJKS9"
-
-    val wallet1: Wallet
-    val wallet2: Wallet
+    var wallet1: Wallet
 
     init {
-        wallet1 = iotaFactory.createWallet()
-        wallet1.id = wallet1Id
-        wallet2 = iotaFactory.createWallet()
-        wallet2.id = createWalletID()
+        wallet1 = etherFactory.createWallet()
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
+
+        setActiveFragment(WelcomeFragment())
 
         val toggle = ActionBarDrawerToggle(
             this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
@@ -45,41 +42,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
 
         nav_view.setNavigationItemSelectedListener(this)
-        wallet1IdLabel.text = wallet1.id
-        wallet2IdLabel.text = wallet2.id
 
-        sendTransactionButton.setOnClickListener({
-            val t = iotaFactory.createTransaction(wallet1, wallet2)
-            t.sendMessage("Testmessage!")
-        })
-
-        createWallet1Address.setOnClickListener({
-            wallet1.getValidAdress()
-        })
-
-        createWallet2Address.setOnClickListener({
-            wallet2.getValidAdress()
-        })
-
-        listAllTransactionsButton.setOnClickListener({
-            wallet1.getAllTokens()
-            Log.d("Main", "tokensFromWallet2")
-            wallet2.getAllTokens()
-        })
-    }
-
-    private fun createWalletID(): String {
-        val validChars = listOf(
-            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
-            'M', 'N', 'O', 'P', 'V', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '9'
-        )
-        val builder = StringBuilder()
-        val rnd = Random(System.currentTimeMillis());
-        for (i in 0..80) {
-            val rndNum = Math.abs(rnd.nextInt() % validChars.size)
-            builder.append(validChars[rndNum])
-        }
-        return builder.toString()
     }
 
     override fun onBackPressed() {
@@ -109,9 +72,25 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
         when (item.itemId) {
+            R.id.nav_send_ticket -> {
+                setActiveFragment(SendTicketFragment())
+            }
+            R.id.nav_show_adress -> {
+                setActiveFragment(ShowAddressFragment())
+            }
+            R.id.nav_listtickets -> {
+                setActiveFragment(TicketListFragment())
+            }
+            R.id.nav_manage_wallet -> {
+                setActiveFragment(WelcomeFragment())
+            }
         }
 
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    private fun setActiveFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction().replace(R.id.main_content, fragment).commit()
     }
 }

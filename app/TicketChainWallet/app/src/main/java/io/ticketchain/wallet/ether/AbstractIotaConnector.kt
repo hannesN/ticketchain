@@ -1,6 +1,5 @@
-package io.ticketchain.wallet.iota
+package io.ticketchain.wallet.ether
 
-import android.annotation.SuppressLint
 import jota.IotaAPI
 import java.util.concurrent.CompletableFuture
 import java.util.function.Supplier

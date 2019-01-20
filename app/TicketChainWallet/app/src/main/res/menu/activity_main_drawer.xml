@@ -4,35 +4,19 @@
       tools:showIn="navigation_view">
 
     <group android:checkableBehavior="single">
+        <item android:title="Send Ticket" android:id="@+id/nav_send_ticket" android:icon="@drawable/ic_menu_camera"/>
         <item
-                android:id="@+id/nav_camera"
-                android:icon="@drawable/ic_menu_camera"
-                android:title="Import"/>
-        <item
-                android:id="@+id/nav_gallery"
+                android:id="@+id/nav_show_adress"
                 android:icon="@drawable/ic_menu_gallery"
-                android:title="Gallery"/>
+                android:title="Show Address"/>
         <item
-                android:id="@+id/nav_slideshow"
+                android:id="@+id/nav_listtickets"
                 android:icon="@drawable/ic_menu_slideshow"
-                android:title="Slideshow"/>
+                android:title="List My Tickets"/>
         <item
-                android:id="@+id/nav_manage"
+                android:id="@+id/nav_manage_wallet"
                 android:icon="@drawable/ic_menu_manage"
-                android:title="Tools"/>
+                android:title="Wallet"/>
     </group>
-
-    <item android:title="Communicate">
-        <menu>
-            <item
-                    android:id="@+id/nav_share"
-                    android:icon="@drawable/ic_menu_share"
-                    android:title="Share"/>
-            <item
-                    android:id="@+id/nav_send"
-                    android:icon="@drawable/ic_menu_send"
-                    android:title="Send"/>
-        </menu>
-    </item>
 
 </menu>
