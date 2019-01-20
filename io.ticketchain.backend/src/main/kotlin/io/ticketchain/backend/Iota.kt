@@ -1,11 +1,48 @@
 package io.ticketchain.backend
 
+import jota.IotaAPI
+import jota.dto.response.GetBalancesResponse
+import jota.model.Transaction
+import jota.model.Transfer
+import jota.utils.TrytesConverter
 import java.math.BigInteger
 import java.util.*
+import java.util.concurrent.CompletableFuture
+
+const val IOTA_NODE_PROTOCOL = "https"
+const val IOTA_NODE = "altnodes.devnet.iota.org"
+const val IOTA_NODE_PORT = "443"
+
+const val SEED = "SERVERBEF9KJDBTZLOHSBCJSTJJMABVC9HJBGZIDAHFVMNFQAXGAHJKF9VCGHCFGJCGHFNKLGFEGHJKS9"
+const val DEFAULT_ADDRESS_TO_CREATE_COUNT = 1
+const val DEFAULT_ADDRESS_WITH_CHECKSUM = false
+const val DEFAULT_ADDRESS_SECURITY_LEVEL = 2
+
+const val IOTA_TRANSFER_VALUE: Long = 0
+const val IOTA_TRANFER_TAG = "TICKETCHAINITEMISBERLIN9999"
+
+const val IOTA_TRANSFER_DEPTH: Int = 9
+const val IOTA_TRANSFER_MIN_WEIGHT_MAGNITUDE: Int = 14
+const val IOTA_TRANSFER_SECURITY = 2
+const val IOTA_TRANSFER_VALIDATE_INPUTS = false
+const val IOTA_TRANSFER_VALIDATE_INPUT_ADDRESS = true
+
+val IOTA_TRANSFER_INPUTS = null
+val IOTA_TRANSFER_REMAINDER_ADDRESS = null
+val IOTA_TRANSFER_TIPS = null
+
+data class IotaPublicAddress(val address: String)
 
 class Iota {
     companion object {
+        val iota = IotaAPI.Builder()
+            .protocol(IOTA_NODE_PROTOCOL)
+            .host(IOTA_NODE)
+            .port(IOTA_NODE_PORT)
+            .build()
+
         private val ticketMap = mutableMapOf<String, List<TicketWithToken>>()
+        private val ticketByAddressMap = mutableMapOf<IotaPublicAddress, TicketWithToken>()
 
         fun randomToken(): String {
             return Trytes.randomSequenceOfLength(81)
@@ -13,6 +50,15 @@ class Iota {
 
         fun send(eventKey: String, tickets: MutableList<TicketWithToken>) {
             ticketMap.put(eventKey, tickets)
+
+            tickets.forEach {
+                CompletableFuture.supplyAsync {
+                    val transfer = createTransferToMe(it.ticket)
+                    println("$transfer.address - $it")
+                    ticketByAddressMap.put(IotaPublicAddress(transfer.address), it)
+                    send(transfer)
+                }
+            }
         }
 
         fun find(eventKey: String): List<TicketWithToken> {
@@ -23,14 +69,71 @@ class Iota {
             return ticketList
         }
 
+        fun createAddress(): IotaPublicAddress {
+            val newAddresses = iota.generateNewAddresses(
+                SEED,
+                DEFAULT_ADDRESS_SECURITY_LEVEL,
+                DEFAULT_ADDRESS_WITH_CHECKSUM,
+                DEFAULT_ADDRESS_TO_CREATE_COUNT
+            )
+            return IotaPublicAddress(newAddresses.first())
+        }
+
+        fun createTransferToMe(ticket: Ticket): Transfer {
+            return createTransfer(ticket, createAddress())
+        }
+
+        fun createTransfer(ticket: Ticket, to: IotaPublicAddress): Transfer {
+            val ticketAsTrytes = TrytesConverter.asciiToTrytes(TicketConverter.toJson(ticket))
+            return Transfer(
+                to.address,
+                499,
+                ticketAsTrytes,
+                IOTA_TRANFER_TAG
+            )
+        }
+
+        fun send(transfer: Transfer): IotaPublicAddress {
+            iota.sendTransfer(
+                SEED,
+                IOTA_TRANSFER_SECURITY,
+                IOTA_TRANSFER_DEPTH,
+                IOTA_TRANSFER_MIN_WEIGHT_MAGNITUDE,
+                listOf(transfer),
+                IOTA_TRANSFER_INPUTS,
+                IOTA_TRANSFER_REMAINDER_ADDRESS,
+                IOTA_TRANSFER_VALIDATE_INPUTS,
+                IOTA_TRANSFER_VALIDATE_INPUT_ADDRESS,
+                IOTA_TRANSFER_TIPS
+            )
+            return IotaPublicAddress(transfer.address)
+        }
+
         fun findAll(): List<TicketWithToken> {
             return ticketMap.values.flatMap { it }
+        }
+
+        fun find(address: IotaPublicAddress): Transaction? {
+            val transactions =
+                iota.findTransactionObjectsByAddresses(listOf(address.address).toTypedArray())
+            if(transactions.isEmpty()) {
+                return null
+            }
+            return transactions.first()
+        }
+
+        fun getBalance(): GetBalancesResponse? {
+            val balances = iota.getBalances(1, listOf(SEED))
+            return balances
+        }
+
+        fun decodeMessage(transaction: Transaction): String {
+            return TrytesConverter.trytesToAscii(transaction.signatureFragments.replace("9*$".toRegex(),""))
         }
     }
 }
 
 object Trytes {
-
     val NULL_HASH = fromTrits(ByteArray(81 * 3))
     val TRYTES = "9ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     private val BI3 = BigInteger.valueOf(3)

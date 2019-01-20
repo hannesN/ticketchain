@@ -31,7 +31,11 @@ class TicketConverter {
             return gson().toJson(ticket)
         }
 
-        fun toJson(ticket: List<TicketWithToken>): String {
+        fun toJson(tickets: List<TicketWithToken>): String {
+            return gson().toJson(tickets)
+        }
+
+        fun toJson(ticket: TicketWithToken): String {
             return gson().toJson(ticket)
         }
 

@@ -24,16 +24,6 @@ class HttpServer(val port: Int) {
         Spark.get(GET_TICKETS) { req, res -> getAllTickets(req, header(res)) }
     }
 
-    private fun getAllTickets(req: Request, res: Response): String {
-        return TicketConverter.toJson(Iota.findAll())
-    }
-
-    private fun header(res: Response): Response {
-        println("- ${res}")
-        res.header("Access-Control-Allow-Origin", "*")
-        return res
-    }
-
     private fun createTickets(req: Request, res: Response): String {
         val json = req.body()
         val creationAction = TicketConverter.fromJson(json)
@@ -57,15 +47,25 @@ class HttpServer(val port: Int) {
         val event = req.params(":event")
 
         val dateString = req.params(":date")
-        val date = try {
+        try {
             DATE_URL_FORMATTER.parse(dateString)
         } catch (e: ParseException) {
             res.status(500)
-            return "Cannot parse '${dateString}' as 'yyyyMMddHHmm' date - e.toString()."
+            return "Cannot parse '$dateString' as 'yyyyMMddHHmm' date - e.toString()."
         }
 
-        val ticketList = Iota.find("${event}/${dateString}")
+        val ticketList = Iota.find("$event/$dateString")
 
         return TicketConverter.toJson(ticketList)
+    }
+
+    private fun getAllTickets(req: Request, res: Response): String {
+        return TicketConverter.toJson(Iota.findAll())
+    }
+
+    private fun header(res: Response): Response {
+        println("- ${res}")
+        res.header("Access-Control-Allow-Origin", "*")
+        return res
     }
 }
