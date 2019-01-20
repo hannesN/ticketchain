@@ -18,11 +18,27 @@
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn flat icon color="blue" @click="addTicket(ticket)">
+                <v-btn flat icon color="blue" @click="dialog=true">
                   <v-icon>send</v-icon>
                 </v-btn>
               </v-card-actions>
             </v-card>
+            <!-- dialog -->
+            <v-dialog v-model="dialog" max-width="500px">
+              <v-card>
+                <v-card-title>
+                  Send Ticket
+                </v-card-title>
+                <v-card-text>
+                  <v-flex xs12 sm12 md12>
+                    <v-text-field label="Targetaddress" v-model="targetAddress"></v-text-field>
+                  </v-flex>
+                </v-card-text>
+                <v-card-actions>
+                  <v-btn color="primary" flat @click="dialog=false">Send</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
           </v-flex>
           <v-flex xs12 sm12 md10 offset-md1 v-if="tickets.length === 0">
             <v-card light>
@@ -64,7 +80,9 @@ export default {
   name: 'TicketList',
   data () {
     return {
-      emptyTicket: new Ticket(0, 'no event set', 'no location', 'no promoter', 'no date')
+      emptyTicket: new Ticket(0, 'no event set', 'no location', 'no promoter', 'no date'),
+      dialog: false,
+      targetAddress: ''
     }
   },
   computed: {
@@ -89,7 +107,7 @@ export default {
 </script>
 
 <style scoped>
-.btnInfo {
-  background-color: #2196f3 !important;
-}
+  .btnInfo {
+    background-color: #2196f3 !important;
+  }
 </style>
