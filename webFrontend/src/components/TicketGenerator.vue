@@ -13,14 +13,17 @@
             <v-card-text>
               <v-text-field label="Promoter" outline v-model="ticket.promoter"></v-text-field>
             </v-card-text>
-            <v-flex xs12 sm6 class="hidden-xs-only">
-              <v-date-picker v-model="ticket.promoter" color="green lighten-1" header-color="primary"></v-date-picker>
+            <v-card-text>
+              <v-text-field label="Amount" outline v-model="amount"></v-text-field>
+            </v-card-text>
+            <v-flex xs12 sm12 class="hidden-xs-only">
+              <v-date-picker v-model="ticket.date" color="green lighten-1" header-color="primary"></v-date-picker>
             </v-flex>
             <v-card-text>
               <v-container fluid grid-list-xl>
                 <v-layout row justify-space-around>
                   <div>
-                    <v-btn color="info" class="btnInfo" @click="addTicket">SEND</v-btn>
+                    <v-btn color="info" class="btnInfo" @click="newTicket(ticket, amount)">SEND</v-btn>
                   </div>
                 </v-layout>
               </v-container>
@@ -37,6 +40,7 @@ import {
   addTicket
 } from '../bo/sendTickets'
 import store from '../bo/store'
+import moment from 'moment'
 
 export default {
   name: 'TicketGenerator',
@@ -47,12 +51,16 @@ export default {
         location: '',
         promoter: '',
         date: ''
-      }
+      },
+      amount: 1
     }
   },
   methods: {
-    addTicket () {
-      addTicket(this.ticket)
+    newTicket (ticket, amount) {
+      var ticketToSend = Object.assign({}, ticket)
+      ticketToSend.date = moment(ticket.date).toISOString()
+      addTicket(ticketToSend, amount)
+      store.commit('setTabIndex', 0)
     }
   },
   mounted () {

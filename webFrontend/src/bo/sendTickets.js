@@ -1,11 +1,28 @@
 import store from './store'
 import axios from 'axios'
-import Ticket from './Ticket'
+// import Ticket from './Ticket'
+// import moment from 'moment'
+import {getTickets} from './getTickets'
 
-function addTicket (ticket) {
-  axios.post('http://192.168.16.150:8080/tickets', ticket)
+function addTicket (ticket, amount) {
+  var postData = Object.assign({}, {
+    ticket: ticket, count: amount
+  })
+  console.log(JSON.stringify(postData))
+  let axiosConfig = {
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8',
+      'Access-Control-Allow-Origin': '*'
+    }
+  }
+  axios({
+    method: 'post',
+    url: 'http://192.168.16.150:8080/tickets',
+    data: JSON.stringify(postData),
+    header: axiosConfig
+  })
     .then(function (response) {
-      store.commit('addTicket', new Ticket(response.data.token, response.data.event, response.data.location, response.data.promoter, response.data.date))
+      getTickets()
       store.commit('finishLoadingSuccessfully')
     })
     .catch(function (error) {

@@ -15,8 +15,8 @@
       </v-tabs>
     </v-toolbar>
     <v-tabs-items v-model="tab">
-      <ticket-list v-if="parseInt(tab)===0" />
-      <ticket-generator v-if="parseInt(tab)===1" />
+      <ticket-list v-if="tab===0" />
+      <ticket-generator v-if="tab===1" />
     </v-tabs-items>
   </v-app>
   <v-app v-if="!loggedIn">
@@ -35,7 +35,6 @@ export default {
   data () {
     return {
       msg: 'Welcome to Your Wallet',
-      tab: null,
       items: [
         'Your Wallet', 'New Ticket'
       ]
@@ -44,6 +43,14 @@ export default {
   computed: {
     loggedIn () {
       return store.state.loggedIn
+    },
+    tab: {
+      get () {
+        return store.state.tabIndex
+      },
+      set (value) {
+        store.commit('setTabIndex', parseInt(value))
+      }
     }
   },
   components: {

@@ -8,11 +8,12 @@ export default new Vuex.Store({
     tickets: [],
     showSnackBar: false,
     snackBarText: '',
-    loggedIn: false
+    loggedIn: false,
+    tabIndex: 0
   },
   mutations: {
     addTicket (store, ticket) {
-      store.tickets.push(ticket)
+      store.tickets = ticket
     },
     startLoading (store) {
       store.showSnackBar = false
@@ -27,6 +28,9 @@ export default new Vuex.Store({
     },
     login (store) {
       store.loggedIn = true
+    },
+    setTabIndex (store, tabIndex) {
+      store.tabIndex = tabIndex
     }
   }
 })

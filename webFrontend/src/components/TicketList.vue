@@ -8,9 +8,14 @@
               <v-card-title primary-title>
                 <div>
                   <div class="headline">{{ticket.event}}</div>
-                  <span class="grey--text">The Ticket has the ID: {{ticket.id}}</span>
                 </div>
               </v-card-title>
+              <v-card-text>
+                <p class="grey--text text-sm-left">The Token-ID is: {{ticket.id}}</p>
+                <p class="grey--text text-sm-left">The Eventlocation is: {{ticket.location}}</p>
+                <p class="grey--text text-sm-left">The Eventpromoter is: {{ticket.promoter}}</p>
+                <p class="grey--text text-sm-left">The Date is: {{ticket.date.format('DD/MM/YYYY')}}</p>
+              </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn flat icon color="blue" @click="addTicket(ticket)">
@@ -76,6 +81,9 @@ export default {
   methods: {
     addTicket: addTicket,
     getTickets: getTickets
+  },
+  mounted () {
+    getTickets()
   }
 }
 </script>
