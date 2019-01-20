@@ -16,29 +16,13 @@
                 <p class="grey--text text-sm-left">The Eventpromoter is: {{ticket.promoter}}</p>
                 <p class="grey--text text-sm-left">The Date is: {{ticket.date.format('DD/MM/YYYY')}}</p>
               </v-card-text>
-              <v-card-actions>
+              <v-card-actions class="btnContainer">
                 <v-spacer></v-spacer>
-                <v-btn flat icon color="blue" @click="dialog=true">
+                <v-btn flat icon color="blue" @click="openDialogForTicket(ticket)">
                   <v-icon>send</v-icon>
                 </v-btn>
               </v-card-actions>
             </v-card>
-            <!-- dialog -->
-            <v-dialog v-model="dialog" max-width="500px">
-              <v-card>
-                <v-card-title>
-                  Send Ticket
-                </v-card-title>
-                <v-card-text>
-                  <v-flex xs12 sm12 md12>
-                    <v-text-field label="Targetaddress" v-model="targetAddress"></v-text-field>
-                  </v-flex>
-                </v-card-text>
-                <v-card-actions>
-                  <v-btn color="primary" flat @click="dialog=false">Send</v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
           </v-flex>
           <v-flex xs12 sm12 md10 offset-md1 v-if="tickets.length === 0">
             <v-card light>
@@ -62,6 +46,25 @@
       <v-snackbar v-model="snackbar" color="info" :right="true" :timeout="1000" :top="true">
         {{ snackbarText }}
       </v-snackbar>
+      <!-- dialog -->
+      <v-dialog v-model="dialog" max-width="500px">
+        <v-card>
+          <v-card-title>
+            Send Ticket
+          </v-card-title>
+          <v-card-text>
+            <v-flex xs12 sm12 md12>
+              <v-text-field label="Targetaddress" v-model="targetAddress"></v-text-field>
+            </v-flex>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn flat icon color="blue" @click="sendTicket">
+              <v-icon>send</v-icon>
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-app>
   </div>
 </template>
@@ -82,7 +85,8 @@ export default {
     return {
       emptyTicket: new Ticket(0, 'no event set', 'no location', 'no promoter', 'no date'),
       dialog: false,
-      targetAddress: ''
+      targetAddress: '',
+      ticketToSend: {}
     }
   },
   computed: {
@@ -98,7 +102,16 @@ export default {
   },
   methods: {
     addTicket: addTicket,
-    getTickets: getTickets
+    getTickets: getTickets,
+    openDialogForTicket (ticket) {
+      this.ticketToSend = ticket
+      this.dialog = true
+    },
+    sendTicket () {
+      console.log(JSON.stringify(this.ticketToSend))
+      console.log(this.targetAddress)
+      this.dialog = false
+    }
   },
   mounted () {
     getTickets()
@@ -107,7 +120,17 @@ export default {
 </script>
 
 <style scoped>
-  .btnInfo {
-    background-color: #2196f3 !important;
-  }
+.btnInfo {
+  background-color: #2196f3 !important;
+}
+
+.btnContainer {
+  margin-top: -40pt !important;
+}
+
+p {
+  margin-bottom: 6px !important;
+  word-break: break-all;
+  white-space: normal;
+}
 </style>
