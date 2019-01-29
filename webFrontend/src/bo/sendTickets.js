@@ -4,23 +4,37 @@ import axios from 'axios'
 // import moment from 'moment'
 import {getTickets} from './getTickets'
 
-function addTicket (ticket, amount) {
-  var postData = Object.assign({}, {
-    ticket: ticket, count: amount
-  })
-  console.log(JSON.stringify(postData))
+function addTicket (ticket) {
   let axiosConfig = {
     headers: {
-      'Content-Type': 'application/json;charset=UTF-8',
+      'Content-Type': 'application/json',
       'Access-Control-Allow-Origin': '*'
     }
   }
-  axios({
-    method: 'post',
-    url: 'http://192.168.16.150:8080/tickets',
-    data: JSON.stringify(postData),
-    header: axiosConfig
-  })
+  axios.post('http://localhost:8080/events/new', JSON.stringify(ticket), axiosConfig)
+    .then(function (response) {
+      getTickets()
+      store.commit('finishLoadingSuccessfully')
+    })
+    .catch(function (error) {
+      console.log(error)
+      store.commit('finishLoadingWithError')
+    })
+}
+
+//0x67dE66d863e2a35b4dD239162896166198bFe223
+function sendTicket (eventID, receiver) {
+  let axiosConfig = {
+    headers: {
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*'
+    }
+  }
+  var ticket = {
+    event: eventID,
+    receiver: receiver
+  }
+  axios.post('http://localhost:8080/events/sendticket', JSON.stringify(ticket), axiosConfig)
     .then(function (response) {
       getTickets()
       store.commit('finishLoadingSuccessfully')
@@ -32,5 +46,6 @@ function addTicket (ticket, amount) {
 }
 
 export {
-  addTicket
+  addTicket,
+  sendTicket
 }

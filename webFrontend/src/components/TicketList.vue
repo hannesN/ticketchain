@@ -13,7 +13,7 @@
               <v-card-text>
                 <p class="grey--text text-sm-left">The Token-ID is: {{ticket.id}}</p>
                 <p class="grey--text text-sm-left">The Eventlocation is: {{ticket.location}}</p>
-                <p class="grey--text text-sm-left">The Eventpromoter is: {{ticket.promoter}}</p>
+                <p class="grey--text text-sm-left">The Eventpromoter is: {{ticket.producer}}</p>
                 <p class="grey--text text-sm-left">The Date is: {{ticket.date.format('DD/MM/YYYY')}}</p>
               </v-card-text>
               <v-card-actions class="btnContainer">
@@ -59,7 +59,7 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn flat icon color="blue" @click="sendTicket">
+            <v-btn flat icon color="blue" @click="sendTicketButton">
               <v-icon>send</v-icon>
             </v-btn>
           </v-card-actions>
@@ -72,7 +72,8 @@
 <script>
 import store from '../bo/store'
 import {
-  addTicket
+  addTicket,
+  sendTicket
 } from '../bo/sendTickets'
 import {
   getTickets
@@ -107,9 +108,10 @@ export default {
       this.ticketToSend = ticket
       this.dialog = true
     },
-    sendTicket () {
-      console.log(JSON.stringify(this.ticketToSend))
-      console.log(this.targetAddress)
+    sendTicketButton () {
+      // console.log(JSON.stringify(this.ticketToSend))
+      // console.log(this.targetAddress)
+      sendTicket(this.ticketToSend.id, this.targetAddress)
       this.dialog = false
     }
   },

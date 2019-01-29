@@ -5,16 +5,16 @@
         <v-flex xs12 sm12 md10 offset-md1 class="inputContainer">
           <v-card>
             <v-card-text>
-              <v-text-field label="Event" outline v-model="ticket.event"></v-text-field>
+              <v-text-field label="Event" outline v-model="ticket.name"></v-text-field>
             </v-card-text>
             <v-card-text>
               <v-text-field label="Location" outline v-model="ticket.location"></v-text-field>
             </v-card-text>
             <v-card-text>
-              <v-text-field label="Promoter" outline v-model="ticket.promoter"></v-text-field>
+              <v-text-field label="Producer" outline v-model="ticket.producer"></v-text-field>
             </v-card-text>
             <v-card-text>
-              <v-text-field label="Amount" outline v-model="amount"></v-text-field>
+              <v-text-field label="Amount" outline v-model="ticket.amount"></v-text-field>
             </v-card-text>
             <v-flex xs12 sm12 class="hidden-xs-only">
               <v-date-picker v-model="ticket.date" color="green lighten-1" header-color="primary"></v-date-picker>
@@ -47,19 +47,19 @@ export default {
   data () {
     return {
       ticket: {
-        event: '',
+        name: '',
         location: '',
-        promoter: '',
-        date: ''
+        producer: '',
+        date: '',
+        amount: 1
       },
-      amount: 1
     }
   },
   methods: {
     newTicket (ticket, amount) {
       var ticketToSend = Object.assign({}, ticket)
       ticketToSend.date = moment(ticket.date).toISOString()
-      addTicket(ticketToSend, amount)
+      addTicket(ticketToSend)
       store.commit('setTabIndex', 0)
     }
   },

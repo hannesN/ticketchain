@@ -5,13 +5,13 @@ import moment from 'moment'
 
 function getTickets () {
   store.commit('startLoading')
-  axios.get('http://192.168.16.150:8080/tickets')
+  axios.get('http://localhost:8080/eventsfromchain')
     .then(function (response) {
       var newTickets = []
       response.data.forEach(ticket => {
-        var ticketData = ticket.ticket
+        var ticketData = ticket
         var date = moment(ticketData.date)
-        newTickets.push(new Ticket(ticket.token, ticketData.event, ticketData.location, ticketData.promoter, date))
+        newTickets.push(new Ticket(ticket.id, ticketData.name, ticketData.location, ticketData.producer, date))
       })
       store.commit('addTicket', newTickets)
       store.commit('finishLoadingSuccessfully')
