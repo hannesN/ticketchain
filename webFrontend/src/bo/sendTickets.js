@@ -22,7 +22,6 @@ function addTicket (ticket) {
     })
 }
 
-//0x67dE66d863e2a35b4dD239162896166198bFe223
 function sendTicket (eventID, receiver) {
   let axiosConfig = {
     headers: {

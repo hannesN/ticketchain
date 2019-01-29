@@ -52,7 +52,7 @@ export default {
         producer: '',
         date: '',
         amount: 1
-      },
+      }
     }
   },
   methods: {
